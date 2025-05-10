@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,7 +51,7 @@ public class ClinitaController {
 
         if (doctor == null || consultorio == null) {
             model.addAttribute("mensaje", "Doctor o Consultorio no encontrados.");
-            return "resultado";
+            return "resultado"; // Redirige a una vista de error
         }
 
         Cita cita = new Cita();
@@ -62,12 +63,19 @@ public class ClinitaController {
         if (citaService.validarCita(consultorio, doctor, horario, nombrePaciente)) {
             citaService.agendarCita(cita);
             model.addAttribute("mensaje", "Cita agendada exitosamente.");
+            return "redirect:/citas/lista"; // Redirigir a la lista de citas
         } else {
             model.addAttribute("mensaje", "No se puede agendar la cita debido a las reglas de validación.");
+            return "resultado"; // Redirigir a la vista de resultado
         }
-        return "resultado";
     }
 
+    @GetMapping("/formulario")
+    public String mostrarFormulario(Model model) {
+        model.addAttribute("doctores", doctorRepository.findAll());
+        model.addAttribute("consultorios", consultorioRepository.findAll());
+        return "formulario_agendar_cita";
+    }
 
     @GetMapping("/consultarPorDoctor")
     public String mostrarFormularioConsultaDoctor(Model model) {
@@ -98,19 +106,20 @@ public class ClinitaController {
         Cita cita = citaService.obtenerCitaPorId(id);
         if (cita == null) {
             model.addAttribute("mensaje", "Cita no encontrada.");
-            return "resultado";
+            return "resultado"; // Redirige a una vista de error
         }
+
         model.addAttribute("cita", cita);
         model.addAttribute("doctores", doctorRepository.findAll());
         model.addAttribute("consultorios", consultorioRepository.findAll());
-        return "formulario_editar_cita"; // Vista para editar una cita
+        return "formulario_editar_cita"; // Vista para editar la cita
     }
 
     @PostMapping("/editar/{id}")
     public String editarCita(
             @PathVariable Long id,
-            @RequestParam Long doctorId,
-            @RequestParam Long consultorioId,
+            @RequestParam Long doctorId,  // Cambié doctorId para que coincida con el formulario
+            @RequestParam Long consultorioId,  // Cambié consultorioId para que coincida con el formulario
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario,
             @RequestParam String nombrePaciente,
             Model model) {
@@ -135,19 +144,23 @@ public class ClinitaController {
         } else {
             model.addAttribute("mensaje", "No se puede editar la cita debido a las reglas de validación.");
         }
-        return "resultado"; // Vista para mostrar el resultado
+        return "redirect:/citas/lista"; // Redirige a la lista de citas después de editar
     }
 
-    @GetMapping("/cancelar/{id}")
-    public String cancelarCita(@PathVariable Long id, Model model) {
-        Cita cita = citaService.obtenerCitaPorId(id);
-        if (cita != null && cita.getHorario().isAfter(LocalDateTime.now())) {
-            citaService.cancelarCita(id);
-            model.addAttribute("mensaje", "Cita cancelada exitosamente.");
-        } else {
-            model.addAttribute("mensaje", "No se puede cancelar la cita. Ya pasó el horario.");
-        }
-        return "resultado"; // Vista para mostrar el resultado
+
+    @PostMapping("/cancelar/{id}")
+    public String cancelarCita(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        citaService.cancelarCita(id); // Asegúrate de tener este método en tu service
+        redirectAttributes.addFlashAttribute("mensaje", "Cita eliminada correctamente.");
+        return "redirect:/citas/lista"; // Redirige a la lista de citas
     }
+
+    @GetMapping("/lista")
+    public String mostrarListaCitas(Model model) {
+        List<Cita> citas = citaService.obtenerTodasLasCitas(); // Método del servicio
+        model.addAttribute("citas", citas);  // Agregar las citas al modelo
+        return "lista_citas"; // Vista que muestra las citas
+    }
+
 
 }

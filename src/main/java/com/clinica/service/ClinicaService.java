@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClinicaService {
@@ -16,7 +17,6 @@ public class ClinicaService {
     @Autowired
     private CitaRepository citaRepository;
 
-    // Agendar una cita
     public void agendarCita(Cita cita) {
         citaRepository.save(cita);
     }
@@ -63,5 +63,26 @@ public class ClinicaService {
 
     public void cancelarCita(Long id) {
         citaRepository.deleteById(id);
+    }
+
+    public List<Cita> obtenerTodasLasCitas() {
+        return citaRepository.findAll();
+    }
+
+    public void editarCita(Cita cita) {
+
+        Optional<Cita> citaExistente = citaRepository.findById(cita.getId());
+
+        if (citaExistente.isPresent()) {
+            // Si la cita existe, actualiza los campos necesarios
+            Cita citaActualizada = citaExistente.get();
+
+            citaActualizada.setDoctor(cita.getDoctor());
+            citaActualizada.setConsultorio(cita.getConsultorio());
+            citaActualizada.setHorario(cita.getHorario());
+            citaActualizada.setNombrePaciente(cita.getNombrePaciente());
+
+            citaRepository.save(citaActualizada);
+        }
     }
 }

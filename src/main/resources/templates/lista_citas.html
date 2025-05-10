@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Citas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h2>Lista de Citas</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Doctor</th>
+            <th>Consultorio</th>
+            <th>Fecha y Hora</th>
+            <th>Paciente</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cita : ${citas}">
+            <td th:text="${cita.doctor.nombre}">Doctor</td>
+            <td th:text="${cita.consultorio.numero}">Consultorio</td>
+            <td th:text="${cita.horario}">Fecha y Hora</td>
+            <td th:text="${cita.nombrePaciente}">Paciente</td>
+            <td>
+                <!-- Botón para cancelar la cita -->
+                <form th:action="@{/citas/cancelar/{id}(id=${cita.id})}" method="POST">
+                    <button type="submit" class="btn btn-danger">Eliminar Cita</button>
+                </form>
+
+                <!-- Botón para editar la cita -->
+                <a th:href="@{/citas/editar/{id}(id=${cita.id})}" class="btn btn-warning">Editar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

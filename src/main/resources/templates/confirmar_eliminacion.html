@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Eliminar Cita</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>¿Está seguro de que desea eliminar esta cita?</h2>
+
+    <div class="alert alert-danger" role="alert">
+        Esta acción no se puede deshacer.
+    </div>
+
+    <div>
+        <form th:action="@{/citas/cancelar/{id}(id=${cita.id})}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Eliminar Cita</button>
+        </form>
+
+        <a th:href="@{/citas/lista}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</div>
+
+</body>
+</html>

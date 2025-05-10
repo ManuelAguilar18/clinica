@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Agendar Cita</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Agendar Cita</h2>
+    <form th:action="@{/citas/agendar}" method="POST">
+
+        <!-- Nombre del paciente -->
+        <div class="mb-3">
+            <label for="nombrePaciente" class="form-label">Nombre del Paciente</label>
+            <input type="text" class="form-control" id="nombrePaciente" name="nombrePaciente" required>
+        </div>
+
+        <!-- Doctor -->
+        <div class="mb-3">
+            <label for="doctorId" class="form-label">Selecciona el Doctor</label>
+            <select class="form-select" id="doctorId" name="doctorId" required>
+                <option th:each="doctor : ${doctores}" th:value="${doctor.id}" th:text="${doctor.nombre}"></option>
+            </select>
+        </div>
+
+        <!-- Consultorio -->
+        <div class="mb-3">
+            <label for="consultorio" class="form-label">Selecciona el Consultorio</label>
+            <select class="form-select" id="consultorio" name="consultorioId" required>
+                <option th:each="c : ${consultorios}"
+                        th:value="${c.id}"
+                        th:text="${c.numero}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Horario -->
+        <div class="mb-3">
+            <label for="horario" class="form-label">Selecciona el Horario</label>
+            <input type="datetime-local" class="form-control" id="horario" name="horario" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Agendar Cita</button>
+    </form>
+</div>
+
+</body>
+</html>

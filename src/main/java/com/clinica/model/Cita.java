@@ -1,8 +1,6 @@
 package com.clinica.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Entity
