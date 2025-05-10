@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Citas</title>
+</head>
+<body>
+<h2>Consultar Citas</h2>
+
+<form action="/citas/consultar" method="GET">
+    <label for="doctor">Doctor:</label>
+    <select name="doctorId" id="doctor" required>
+        <option value="">Seleccione un doctor</option>
+        <!-- Aquí debe ir el bucle para mostrar los doctores disponibles -->
+        <option value="1">Dr. Ramos</option>
+        <option value="2">Dr. López</option>
+        <option value="3">Dr. Pérez</option>
+    </select><br><br>
+
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha" required><br><br>
+
+    <button type="submit">Consultar</button>
+</form>
+
+<h3>Citas del Doctor</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Nombre Paciente</th>
+        <th>Consultorio</th>
+        <th>Horario</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Juan Pérez</td>
+        <td>Consultorio 101</td>
+        <td>2025-05-10 10:00</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
